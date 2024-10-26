@@ -1,6 +1,12 @@
 # Ignore JetBrains IDE project settings
 .idea/
 
+# Mac Metadata
+.DS_Store
+
+# Data Dir
+data/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -125,6 +131,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+.artifacts
+artifacts/
 .env
 .venv
 env/
