@@ -12,9 +12,11 @@ from src.exception import CustomException
 from src.logger import logging
 from src.utils import save_object
 
+
 @dataclass
 class DataTransformationConfig:
-    preprocessor_ob_file_path = os.path.join('artifacts',"preprocessor.pkl")
+    preprocessor_ob_file_path = os.path.join('artifacts', "preprocessor.pkl")
+
 
 class DataTransformation:
     def __init__(self):
@@ -22,7 +24,8 @@ class DataTransformation:
 
     def get_data_transformer_object(self):
         try:
-            numerical_columns = ["person_age","person_income","person_emp_length","loan_amnt","loan_int_rate","loan_percent_income","cb_person_cred_hist_length"]
+            numerical_columns = ["person_age", "person_income", "person_emp_length", "loan_amnt",
+                                 "loan_int_rate", "loan_percent_income", "cb_person_cred_hist_length"]
             categorical_column = [
                 "person_home_ownership",
                 "loan_intent",
@@ -31,34 +34,34 @@ class DataTransformation:
             ]
 
             num_pipeline = Pipeline(
-                steps = [
-                    ("imputer",SimpleImputer(strategy = "median")),
-                    ("scaler",StandardScaler())
+                steps=[
+                    ("imputer", SimpleImputer(strategy="median")),
+                    ("scaler", StandardScaler())
                 ]
             )
             logging.info(f"Numerical columns: {numerical_columns} Imputing and Scaling completed")
 
             cat_pipeline = Pipeline(
-                steps = [
-                    ("imputer",SimpleImputer(strategy = "most_frequent")),
-                    ("one_hot_encoder",OneHotEncoder()),
-                    ("scaler",StandardScaler(with_mean=False))
+                steps=[
+                    ("imputer", SimpleImputer(strategy="most_frequent")),
+                    ("one_hot_encoder", OneHotEncoder()),
+                    ("scaler", StandardScaler(with_mean=False))
                 ]
             )
             logging.info(f"Categorical columns: {categorical_column} encoding completed")
 
             preprocessor = ColumnTransformer(
                 [
-                    ("num_pipeline",num_pipeline,numerical_columns),
-                    ("cat_pipeline",cat_pipeline,categorical_column)
+                    ("num_pipeline", num_pipeline, numerical_columns),
+                    ("cat_pipeline", cat_pipeline, categorical_column)
                 ]
             )
 
             return preprocessor
         except Exception as e:
-            raise CustomException(e,sys)
+            raise CustomException(e, sys)
 
-    def initiate_data_transformation(self,train_path,test_path):
+    def initiate_data_transformation(self, train_path, test_path):
         try:
             train_df = pd.read_csv(train_path)
             test_df = pd.read_csv(test_path)
@@ -87,7 +90,7 @@ class DataTransformation:
                 obj=preprocessing_obj
             )
 
-            return (train_arr, test_arr, self.data_transformation_config.preprocessor_ob_file_path)
+            return train_arr, test_arr, self.data_transformation_config.preprocessor_ob_file_path
 
         except Exception as e:
-            raise CustomException(e,sys)
+            raise CustomException(e, sys)
