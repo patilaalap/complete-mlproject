@@ -8,7 +8,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, log_loss, f1_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
-#from xgboost import XGBClassifier
+# from xgboost import XGBClassifier
 
 from src.exception import CustomException
 from src.logger import logging
@@ -17,21 +17,21 @@ from src.utils import save_object, evaluate_models
 
 @dataclass
 class ModelTrainerConfig:
-    trained_model_file_path = os.path.join("artifacts", "model.pk")
+    trained_model_file_path = os.path.join("artifacts", "model.pkl")
 
 
 class ModelTrainer:
     def __init__(self):
         self.model_trainer_config = ModelTrainerConfig()
 
-    def initiate_model_trainer(self,train_array,test_array):
+    def initiate_model_trainer(self, train_array, test_array):
         try:
             logging.info("Split train and test dataset")
             x_train, y_train, x_test, y_test = (
-                train_array[:,:-1],
-                train_array[:,-1],
-                test_array[:,:-1],
-                test_array[:,-1]
+                train_array[:, :-1],
+                train_array[:, -1],
+                test_array[:, :-1],
+                test_array[:, -1]
             )
             models = {
                 "Random Forest": RandomForestClassifier(),
@@ -39,7 +39,7 @@ class ModelTrainer:
                 "Gradient Boosting": GradientBoostingClassifier(),
                 "Logistic Regression": LogisticRegression(),
                 "K-Neighbours Classifier": KNeighborsClassifier(),
-                #"XGBClassifier": XGBClassifier(),
+                # "XGBClassifier": XGBClassifier(),
                 "CatBoosting Classifier": CatBoostClassifier(verbose=False),
                 "AdaBoost Classifier": AdaBoostClassifier()
             }
@@ -86,7 +86,7 @@ class ModelTrainer:
             }
 
             model_report: dict = evaluate_models(x_train=x_train, y_train=y_train, x_test=x_test, y_test=y_test,
-                                                models=models, params=params)
+                                                 models=models, params=params)
 
             # Get the best model from report
             best_model_score = max(sorted(model_report.values()))
